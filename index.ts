@@ -9,6 +9,14 @@ export interface Heading {
   value: string;
 }
 
+export const hasHeadingsData = (
+  data: unknown
+): data is { headings: Heading[] } =>
+  data instanceof Object &&
+  data.hasOwnProperty("headings") &&
+  // @ts-expect-error
+  data.headings instanceof Array;
+
 export const headings = (root: Node) => {
   const headingList: Heading[] = [];
 

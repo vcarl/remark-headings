@@ -1,6 +1,6 @@
 {
   "name": "@vcarl/remark-headings",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Remark plugin to extract heading metadata while processing markdown files",
   "license": "MIT",
   "keywords": [
