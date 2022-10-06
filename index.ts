@@ -7,6 +7,7 @@ import { VFileWithOutput } from "unified";
 export interface Heading {
   depth: number;
   value: string;
+  id?: string;
 }
 
 export const hasHeadingsData = (
@@ -21,10 +22,19 @@ export const headings = (root: Node) => {
   const headingList: Heading[] = [];
 
   visit(root, "heading", (node: AstHeading) => {
-    headingList.push({
+    const heading: Heading = {
       depth: node.depth,
       value: toString(node, { includeImageAlt: false }),
-    });
+    };
+
+    // If a previous plugin attached the heading id to the node,
+    // store it as part of the heading list.
+    const id = (node?.data as any)?.id;
+    if (id) {
+      heading.id = id;
+    }
+
+    headingList.push(heading);
   });
 
   return headingList;
