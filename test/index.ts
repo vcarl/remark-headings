@@ -16,6 +16,7 @@ import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import remarkGfm from "remark-gfm";
 import plugin, { headings } from "../index.js";
+import { visit } from "unist-util-visit";
 
 const join = path.join;
 
@@ -70,4 +71,31 @@ test("Fixtures", async (t) => {
   }
 
   t.end();
+});
+
+test("Data", async (t) => {
+  const input = `# custom-data Heading
+## Heading without data`;
+  const expected = [
+    { depth: 1, value: 'custom-data Heading', data: { foo: 'bar' } },
+    { depth: 2, value: 'Heading without data' },
+  ];
+
+  const processor = unified()
+    .use(remarkParse)
+    .use(() => {
+      return (root) => {
+        visit(root, "heading", (node) => {
+          const child = node.children?.[0];
+          if (child.type === 'text' && child.value.startsWith('custom-data')) {
+            node.data = { foo: 'bar' };
+          }
+        });
+      };
+    })
+    .use(plugin)
+    .use(remarkStringify);
+  const result = await processor.process(input);
+  const data = result.data;
+  t.deepEqual(data.headings, expected, 'should have custom data');
 });
