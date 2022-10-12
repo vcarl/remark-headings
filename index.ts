@@ -7,6 +7,7 @@ import { VFileWithOutput } from "unified";
 export interface Heading {
   depth: number;
   value: string;
+  data?: any;
 }
 
 export const hasHeadingsData = (
@@ -21,10 +22,20 @@ export const headings = (root: Node) => {
   const headingList: Heading[] = [];
 
   visit(root, "heading", (node: AstHeading) => {
-    headingList.push({
+    const heading: Heading = {
       depth: node.depth,
       value: toString(node, { includeImageAlt: false }),
-    });
+    };
+
+    // Other remark plugins can store arbitrary data
+    // inside a node's `data` property, such as a
+    // custom heading id.
+    const data = node?.data;
+    if (data) {
+      heading.data = data;
+    }
+
+    headingList.push(heading);
   });
 
   return headingList;
