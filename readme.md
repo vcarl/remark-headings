@@ -13,7 +13,7 @@ yarn add @vcarl/remark-headings
 
 ## Use
 
-Now running:
+Running:
 
 ```js
 import remarkHeadings from '@vcarl/remark-headings';
@@ -48,6 +48,17 @@ Yields:
   {"depth": 3, "value": "Heading 3"},
 ]
 ```
+
+As a courtesy, any other data found to be attached to the node by other plugins will be forwarded through. For instance if you're using [`remark-heading-id`](https://github.com/imcuttle/remark-heading-id), that custom ID will look like:
+
+```javascript
+[
+  {"depth": 1, "value": "Heading 1", "data": {"id": "custom-id"}},
+  {"depth": 2, "value": "Heading 2"},
+  {"depth": 3, "value": "Heading 3"},
+]
+```
+
 
 ## License
 
